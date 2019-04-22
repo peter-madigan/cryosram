@@ -157,7 +157,7 @@ class CryoSRAM :
     addr_range = [0,2**9]
     val_range = [0,2**8]
     rw_delay = 0.001 # [s] minimum time between commands
-    
+
     SET_ADDR = bitarray('0001')
     WRITE_VAL = bitarray('0010')
     READ_ADDR = bitarray('0011')
@@ -165,7 +165,7 @@ class CryoSRAM :
     SET_CLK =  bitarray('0101')
     READ_CLK =  bitarray('0110')
     SET_DELAY =  bitarray('0111')
-    
+
     def __init__(self, reg_val_map=None, io=None, log=None, clk_factor=25, test=False, delay_factor=0):
         '''
         `log` should be a `CryoLogger` or `logging.getLogger(<name>)` object
@@ -325,7 +325,7 @@ class CryoSRAM :
         self.io.write(header.tobytes() + word.tobytes())
         time.sleep(self.rw_delay)
         self.delay_factor = delay_factor
-    
+
     def test_summary(self, faults):
         '''
         Prints a basic summary of faults
@@ -354,7 +354,7 @@ class CryoSRAM :
         self.test_summary(faults)
         self.log.info(' ~ End serial test ~')
         return faults, None
-            
+
     def mats_test(self):
         '''
         Runs basic MATS++ test :
@@ -432,7 +432,7 @@ class CryoSRAM :
         stages = ['pattern']
         faults = dict([(stage, []) for stage in stages])
         bitmaps = dict([(stage, []) for stage in stages])
-        
+
         doubled_pattern = test_values + list(reversed(test_values))
         self.log.info('Write pattern:')
         for value in doubled_pattern:
@@ -447,7 +447,7 @@ class CryoSRAM :
             self.set_addr(addr)
             expected = self.memory[addr]
             self.read_value()
-            bitmaps[stages[0]] += [(addr, self.memory[addr])]     
+            bitmaps[stages[0]] += [(addr, self.memory[addr])]
             if self.memory[addr] != expected:
                 faults[stages[0]] += [(addr, expected, self.memory[addr])]
 
@@ -492,7 +492,7 @@ class CryoSRAM :
             bitmaps[stages[0]] += [(addr, self.memory[addr])]
             if self.memory[addr] != expected:
                 faults[stages[0]] += [(addr, expected, self.memory[addr])]
-                
+
             # write test values
             for w in test_values:
                 self.write_value(w)

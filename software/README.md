@@ -38,6 +38,7 @@ c.write_value(127) # write 127 to the address 255
 c.read_value() # read the value at the address 255 (should return 127)
 c.set_clk(clk_factor=5) # change SRAM driving frequency = 100MHz/(4*clk_factor)
 c.read_clk() # read the set clk_factor (should be 5)
+c.set_delay(7) # set FPGA to latch read bits 7 ticks after CEN goes high
 ```
 There are some standard cryoSRAM tests available:
  - `c.mats_test()`: perform a standard MATS test
@@ -61,7 +62,7 @@ plot_bit_error_map(fault_list)
 ```
 
 # `CryoSRAM`
-The `CryoSRAM class provides access to:
+The `CryoSRAM` class provides access to:
  - Transmission formatting for the fpga
  - A `memory` object that keeps track of the expected cryoSRAM state
  - Standard tests
@@ -85,14 +86,19 @@ So far, this hasn't been implemented in a nice format (it overwrites the previou
 
 # FPGA comms
 The communication between the computer and FPGA relies on a standard 8-bit, 1MBaud serial UART protocol. Each complete message consists of 2-bytes. They are broken down as follows:
+```
 byte0[7:4] = message type
 byte0[3:0] = message[11:8]
 btye1[11:0] = message[7:0]
+```
 
 The message types the FPGA responds to are:
+```
 SET_ADDR : 0001
 WRITE_VAL : 0010
 READ_ADDR : 0011
 READ_VAL : 0100
 SET_CLK : 0101
 READ_CLK : 0110
+SET_DELAY : 0111
+```
