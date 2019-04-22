@@ -82,7 +82,11 @@ You can track read/writes of an `io` object with
 io.read = self.log.capture_read(io.read)
 io.write = self.log.capture_write(io.write)
 ```
-So far, this hasn't been implemented in a nice format (it overwrites the previously generated method), but for the quick tests that we are planning on doing, it should suffice.
+To stop tracking read/writes of the `io` object use
+```
+io.read = self.log.release_read)
+io.write = self.log.release_write()
+```
 
 # FPGA comms
 The communication between the computer and FPGA relies on a standard 8-bit, 1MBaud serial UART protocol. Each complete message consists of 2-bytes. They are broken down as follows:
